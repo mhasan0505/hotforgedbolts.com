@@ -32,11 +32,6 @@ const Header = () => {
               About Us
             </Link>
           </li>
-          <li>
-            <Link href="/contact" className={menuItemClass}>
-              Contact Us
-            </Link>
-          </li>
         </ul>
         <Link
           href="/contact"
@@ -44,7 +39,9 @@ const Header = () => {
           tabIndex={0}
           role="button"
         >
-          Get started
+          <button className="w-full h-full bg-black text-white rounded-full font-semibold">
+            Contact Us
+          </button>
         </Link>
         <button
           aria-label="menu-btn"
@@ -95,24 +92,17 @@ const Header = () => {
                 About Us
               </Link>
             </li>
-            <li>
-              <Link
-                href="/contact"
-                className={"text-sm " + menuItemClass}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Contact Us
-              </Link>
-            </li>
           </ul>
           <Link
             href="/contact"
-            className={"mt-6 block md:hidden " + buttonClass}
+            className={"mt-6 block md:hidden" + buttonClass}
             tabIndex={0}
             role="button"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Get started
+            <button className="w-full h-full bg-black text-white rounded-full font-semibold">
+              Contact Us
+            </button>
           </Link>
         </div>
       </nav>
