@@ -3,21 +3,21 @@ import Image from "next/image";
 const boltSections = [
   {
     title: "Allen Bolt",
-    img: "/Bolts/Allen bolt/DIN 912  ISO 4762/allen-bolt.jpg",
+    img: "/images/allen-bolt.jpg",
     alt: "Allen Bolt",
     description:
       "High-strength Allen bolts for precision engineering applications.",
   },
   {
     title: "Counter Sunk Allen Bolt",
-    img: "/Bolts/countersunk Allen bolt/ISO 10642 – DIN 7991/countersunk-allen-bolt.jpg",
+    img: "/images/countersunk-allen.jpg",
     alt: "Counter Sunk Allen Bolt",
     description:
       "Counter sunk Allen bolts for flush mounting and clean finishes.",
   },
   {
     title: "Hex Head Screw",
-    img: "/Bolts/Hex head screws/ISO 4014 – DIN 931/hex-head-screw.jpg",
+    img: "/images/hex-head.jpg",
     alt: "Hex Head Screw",
     description: "Durable hex head screws for heavy-duty fastening needs.",
   },
@@ -46,6 +46,10 @@ const Bolts = () => {
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-contain rounded-lg"
                 priority
+                onError={(e) => {
+                  console.error(`Error loading image: ${section.img}`);
+                  e.target.src = "/placeholder.jpg"; // Fallback image
+                }}
               />
             </div>
             <p className="text-gray-600 text-center">{section.description}</p>
