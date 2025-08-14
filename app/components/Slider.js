@@ -62,8 +62,10 @@ export default function Slider() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="text-sm md:text-xl text-white max-w-3xl text-left mt-8"
             >
-              Hot forged bolts and nuts engineered with strength, accuracy, and
-              durability — trusted by industries worldwide
+              <div data-aos="zoom-in-right">
+                Hot forged bolts and nuts engineered with strength, accuracy,
+                and durability — trusted by industries worldwide
+              </div>
             </motion.h3>
           </div>
           <Image
