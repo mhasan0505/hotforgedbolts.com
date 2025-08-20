@@ -1,112 +1,179 @@
 "use client";
 
+import clsx from "clsx";
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Production", path: "/production" },
+    { name: "Contact", path: "/contact" },
+    { name: "About", path: "/about" },
+  ];
 
-  const menuItemClass =
-    "relative hover:text-orange-600 transition-colors duration-200 after:content-[''] after:block after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-orange-500 after:to-red-500 after:transition-all after:duration-300 hover:after:w-full";
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const buttonClass =
-    "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg hover:from-orange-500 hover:to-orange-500 hover:scale-105 active:scale-95 transition-all w-40 h-11 rounded-full font-semibold";
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <>
-      <nav className="h-[70px] relative w-full px-6 md:px-16 lg:px-24 xl:px-32 flex items-center justify-between z-20 bg-white text-gray-700 shadow-[0px_4px_25px_0px_#0000000D] transition-all">
-        <p className="text-2xl font-bold tracking-wider">Hotforgedbolt</p>
-        <ul className="md:flex hidden items-center gap-10">
-          <li>
-            <Link href="/" className={menuItemClass}>
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link href="/products" className={menuItemClass}>
-              Production
-            </Link>
-          </li>
-          <li>
-            <Link href="/about" className={menuItemClass}>
-              About Us
-            </Link>
-          </li>
-        </ul>
-        <Link
-          href="/contact"
-          className={"md:inline hidden " + buttonClass}
-          tabIndex={0}
+    <nav
+      className={clsx(
+        "fixed top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50",
+        {
+          "bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4":
+            isScrolled,
+          "py-4 md:py-6 bg-orange-400": !isScrolled,
+        }
+      )}
+    >
+      {/* Logo */}
+      <Link href="/" className="flex items-center gap-2">
+        <Image
+          src="/logo/logo-1-png.png" // Ensure this path points to a local asset in the public folder
+          alt="Hot Forged Bolts Logo"
+          width={150}
+          height={50}
+          className={clsx({ "opacity-80": isScrolled })}
+        />
+      </Link>
+
+      {/* Desktop Nav */}
+      <div className="hidden md:flex items-center gap-4 lg:gap-8">
+        {navLinks.map((link) => (
+          <Link
+            key={link.path}
+            href={link.path}
+            className={clsx("group flex flex-col gap-0.5", {
+              "text-gray-700": isScrolled,
+              "text-white": !isScrolled,
+            })}
+          >
+            {link.name}
+            <div
+              className={clsx(
+                "h-0.5 w-0 group-hover:w-full transition-all duration-300",
+                {
+                  "bg-orange-500": isScrolled,
+                  "bg-white": !isScrolled,
+                }
+              )}
+            />
+          </Link>
+        ))}
+      </div>
+
+      {/* Desktop Right */}
+      <div className="hidden md:flex items-center gap-4">
+        <svg
+          aria-label="Search"
           role="button"
+          className={clsx("h-6 w-6 text-white transition-all duration-500", {
+            invert: isScrolled,
+          })}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
         >
-          <button className="w-full h-full bg-black text-white rounded-full font-semibold">
-            Contact Us
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <Link href="/contact">
+          <button
+            className={clsx(
+              "px-8 py-2.5 rounded-full ml-4 transition-all duration-500",
+              {
+                "text-white bg-black": isScrolled,
+                "bg-white text-black": !isScrolled,
+              }
+            )}
+          >
+            Get Quote
           </button>
         </Link>
+      </div>
+
+      {/* Mobile Menu Button */}
+      <div className="flex items-center gap-3 md:hidden">
+        <svg
+          aria-label="Open menu"
+          role="button"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className={clsx("h-6 w-6 cursor-pointer text-white", {
+            invert: isScrolled,
+          })}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+      </div>
+
+      {/* Mobile Menu */}
+      <div
+        className={clsx(
+          "fixed top-0 left-0 w-full h-screen bg-white text-base flex flex-col md:hidden items-center justify-center gap-6 font-medium text-gray-800 transition-all duration-500",
+          {
+            "translate-x-0": isMenuOpen,
+            "-translate-x-full": !isMenuOpen,
+          }
+        )}
+      >
         <button
-          aria-label="menu-btn"
-          type="button"
-          className="menu-btn inline-block md:hidden active:scale-90 transition"
-          onClick={() => setMobileMenuOpen((open) => !open)}
+          className="absolute top-4 right-4"
+          onClick={() => setIsMenuOpen(false)}
+          aria-label="Close menu"
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={30}
-            height={30}
-            viewBox="0 0 30 30"
-            fill="#000"
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
           >
-            <path d="M 3 7 A 1.0001 1.0001 0 1 0 3 9 L 27 9 A 1.0001 1.0001 0 1 0 27 7 L 3 7 z M 3 14 A 1.0001 1.0001 0 1 0 3 16 L 27 16 A 1.0001 1.0001 0 1 0 27 14 L 3 14 z M 3 21 A 1.0001 1.0001 0 1 0 3 23 L 27 23 A 1.0001 1.0001 0 1 0 27 21 L 3 21 z" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
-        <div
-          className={`mobile-menu absolute top-[70px] left-0 w-full bg-white p-6 md:hidden transition-all duration-300 ${
-            mobileMenuOpen ? "" : "hidden"
-          }`}
-        >
-          <ul className="flex flex-col space-y-4 text-lg">
-            <li>
-              <Link
-                href="/"
-                className={"text-sm " + menuItemClass}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/products"
-                className={"text-sm " + menuItemClass}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Production
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/about"
-                className={"text-sm " + menuItemClass}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                About Us
-              </Link>
-            </li>
-          </ul>
+
+        {navLinks.map((link) => (
           <Link
-            href="/contact"
-            className={"mt-6 block md:hidden" + buttonClass}
-            tabIndex={0}
-            role="button"
-            onClick={() => setMobileMenuOpen(false)}
+            key={link.path}
+            href={link.path}
+            onClick={() => setIsMenuOpen(false)}
+            className="text-lg"
           >
-            <button className="w-full h-full bg-black text-white rounded-full font-semibold">
-              Contact Us
-            </button>
+            {link.name}
           </Link>
-        </div>
-      </nav>
-    </>
+        ))}
+
+        {/* <button className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all">
+          New Launch
+        </button> */}
+
+        <Link href="/contact" onClick={() => setIsMenuOpen(false)}>
+          <button className="bg-orange-500 text-white px-8 py-2.5 rounded-full transition-all duration-500 cursor-pointer">
+            Get Quote
+          </button>
+        </Link>
+      </div>
+    </nav>
   );
 };
 
